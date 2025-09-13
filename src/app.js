@@ -17,8 +17,8 @@ app.set("views", paths.view);
 app.use(express.json());
 
 
-const productsRouter = require('./src/routes/products.routes');
-const cartsRouter = require('./src/routes/carts.routes');
+const productsRouter = require('./routes/products.routes');
+const cartsRouter = require('./routes/carts.routes');
 
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
