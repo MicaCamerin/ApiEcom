@@ -7,13 +7,13 @@ const productManager = new ProductManager();
 // Home: lista estática
 router.get('/', async (req, res) => {
   const products = await productManager.getProducts();
-  res.render('home', { products });
+  res.render('pages/home', { products });
 });
 
 // Real-time: lista dinámica
 router.get('/realtimeproducts', async (req, res) => {
   const products = await productManager.getProducts();
-  res.render('realTimeProducts', { products });
+  res.render('pages/realTimeProducts', { products });
 });
 
 module.exports = router;

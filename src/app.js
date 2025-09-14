@@ -12,6 +12,7 @@ const PORT = 8080;
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
+
 // Configuración de Handlebars
 app.engine('hbs', handlebars.engine({
   extname: '.hbs',
