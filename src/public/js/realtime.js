@@ -25,7 +25,7 @@ deleteForm.addEventListener('submit', (e) => {
 socket.on('updateProducts', (product) => {
   const li = document.createElement('li');
   li.id = `prod-${product.id}`;
-  li.textContent = `${product.title} - ${product.price}`;
+  li.textContent = `${product.id} - ${product.title} - ${product.price}`;
   productList.appendChild(li);
 });
 

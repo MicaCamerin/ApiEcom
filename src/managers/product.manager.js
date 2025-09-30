@@ -21,7 +21,12 @@ class ProductManager {
         const products = await this.getProducts();
         const newProduct = { 
             id: products.length ? products[products.length - 1].id + 1 : 1,
-            ...product 
+            title: product.title,
+            description: product.description,
+            price: product.price,
+            stock: product.stock,
+            category: product.category,
+            thumbnail: product.thumbnail || null
         };
         products.push(newProduct);
         await fs.promises.writeFile(this.filePath, JSON.stringify(products, null, 2));
