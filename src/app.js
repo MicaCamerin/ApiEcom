@@ -5,8 +5,13 @@ const path = require('path');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const handlebars = require('express-handlebars');
+const connectDB = require('./config/index'); 
+require('dotenv').config();
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
+
+// MongoDB
+connectDB();
 
 // Servidor HTTP y WebSocket
 const httpServer = createServer(app);
