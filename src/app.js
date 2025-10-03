@@ -42,7 +42,7 @@ app.use('/', viewsRouter);
 
 // WebSocket
 io.on('connection', (socket) => {
-  console.log('Nuevo cliente conectado');
+  console.log('Nuevo cliente conectado', socket.id);
 
   socket.on('newProduct', (product) => {
     io.emit('updateProducts', product);
