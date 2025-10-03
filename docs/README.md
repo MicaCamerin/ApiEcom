@@ -1,7 +1,9 @@
 # Cafeto
 
 Proyecto backend desarrollado en **Node.js con Express**, que simula un pequeño e-commerce de café.  
-El sistema permite gestionar productos y carritos, renderizar vistas con **Handlebars**, y actualizar en tiempo real la lista de productos usando **Socket.io**.
+El sistema permite gestionar productos y carritos, renderizar vistas con **Handlebars**, y actualizar en tiempo real la lista de productos usando **Socket.io**.  
+La persistencia principal está implementada con **MongoDB + Mongoose**.
+
 
 Este proyecto es encuentra en curso.
 
@@ -10,21 +12,22 @@ Este proyecto es encuentra en curso.
 ## Funcionalidades principales
 
 - **Productos**
-  - Ver lista de productos.
-  - Crear productos mediante formulario (en tiempo real).
-  - Eliminar productos mediante formulario (en tiempo real).
-  - Persistencia en archivos `JSON`.
+- CRUD completo de productos.
+- Listado con **paginación, filtros y ordenamiento**.
+- Vistas en Handlebars para explorar productos y ver su detalle.
+- Actualización en tiempo real de la lista de productos con **Socket.io**.
 
 - **Carritos**
-  - Crear carritos vacíos.
-  - Consultar el contenido de un carrito.
-  - Agregar productos a un carrito.
+- CRUD completo de carritos.
+- Agregar, actualizar cantidad, eliminar productos o vaciar carrito.
+- Vista para visualizar un carrito con productos **poblados** desde MongoDB.
 
 ---
 
 ## Tecnologías usadas
 - Node.js
 - Express 
+- MongoDB + Mongoose
 - Handlebars 
 - Socket.io
 
@@ -33,12 +36,22 @@ Este proyecto es encuentra en curso.
 ## Estructura del proyecto
 
 src/
-├── data/ # Archivos JSON de productos y carritos
-├── managers/ # Lógica de acceso a datos (productos/carritos)
+├── config/ # Configuración (MongoDB, dotenv)
+├── data/ # DAOs de acceso a MongoDB
+├── managers/ # Lógica de negocio
 ├── public/ # Archivos estáticos (CSS, JS)
 ├── routes/ # Rutas de la API y vistas
-└── views/ # Vistas con Handlebars
-app.js # Configuración principal del servidor
+├── views/ # Vistas con Handlebars
+└── app.js # Configuración principal del servidor
+
+## Endpoints principales
+
+- `/api/products` → CRUD + paginación, filtros y ordenamientos  
+- `/api/carts` → CRUD completo con populate  
+- `/products` → vista con paginación de productos  
+- `/products/:pid` → vista de detalle de producto  
+- `/carts/:cid` → vista del carrito  
+
 
 ## Cómo ejecutar el proyecto
 

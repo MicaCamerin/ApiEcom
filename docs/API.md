@@ -1,15 +1,25 @@
 # API - Cafeto
 
 API REST para la gestión de **productos** y **carritos de compras**.  
-Desarrollada en **Node.js + Express**, con persistencia en archivos `.json`.
-
+Desarrollada en **Node.js + Express**, con persistencia en **MongoDB + Mongoose**.
 ---
 
 ## Productos
 
-### ➤ Obtener todos los productos
+### ➤ Listar productos con consultas avanzadas
 GET /api/products  
-> (Solo usado internamente por las vistas, opcional documentar si se usa en Postman)
+
+Query params disponibles:
+- **limit** → cantidad de productos por página (default: 10)  
+- **page** → página a consultar (default: 1)  
+- **query** → filtrar por categoría o disponibilidad (`status=true/false`)  
+- **sort** → ordenar por precio (`asc` o `desc`)  
+
+
+---
+
+### ➤ Obtener un producto por ID
+GET /api/products/:pid
 
 ---
 
@@ -23,6 +33,10 @@ Body (JSON):
   "price": 1200
 }
 ```
+---
+
+### ➤ Actualizar producto
+PUT /api/products/:pid
 
 ---
 
@@ -52,23 +66,43 @@ POST /api/carts
 ### ➤ Ver productos de un carrito
 GET /api/carts/:cid
 
-Parámetro de ruta:
-- cid → ID del carrito.
-
 ---
 
 ### ➤ Agregar producto a un carrito
 POST /api/carts/:cid/product/:pid
 
-Parámetros de ruta:
-- cid → ID del carrito.  
-- pid → ID del producto.  
+---
+
+### ➤ Eliminar un producto de un carrito
+DELETE /api/carts/:cid/products/:pid
+
+---
+
+### ➤ Remplazar todo el carrito 
+PUT /api/carts/:cid
+
+---
+
+### ➤ Actualizar cantidad de producto
+PUT /api/carts/:cid/products/:pid
+
+---
+
+### ➤ Vaciar carrito 
+DELETE /api/carts/:cid
 
 ---
 
 ## Notas importantes
 
-- Los IDs se generan automáticamente en base al último elemento del archivo `.json`.
-- Los productos se pueden gestionar tanto por la API como por las vistas (`/realtimeproducts`).
-- Los carritos solo se gestionan desde la API (Postman, Insomnia, etc.).
-- No hay base de datos, toda la información se guarda en archivos JSON dentro de la carpeta `/src/data`.
+- Persistencia en MongoDB Atlas con Mongoose.
+- Los carritos almacenan solo IDs de productos, pero al consultarlos se devuelven poblados con la info completa (populate).
+- Vistas con Handlebars:
+
+/products → lista paginada con botones de agregar al carrito
+
+/products/:pid → detalle de producto
+
+/carts/:cid → detalle del carrito con productos poblados
+
+- Productos en tiempo real vía WebSockets en /realtimeproducts.

@@ -1,5 +1,11 @@
 const express = require('express');
 const router = express.Router();
+
+router.get('/', (req, res) => {
+  res.render('pages/home', { layout: 'main' });
+});
+
+
 const ProductManager = require('../managers/product.manager');
 const productManager = new ProductManager();
 const ProductDAO = require('../data/product.mongo');
