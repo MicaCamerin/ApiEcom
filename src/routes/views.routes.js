@@ -12,8 +12,10 @@ router.get('/', async (req, res) => {
 
 // Real-time: lista dinámica
 router.get('/realtimeproducts', async (req, res) => {
+  console.log("Entró a /realtimeproducts");
   const products = await productManager.getProducts();
   res.render('pages/realTimeProducts', { layout: 'main', products });
 });
 
 module.exports = router;
+

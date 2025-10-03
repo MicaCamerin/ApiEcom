@@ -5,6 +5,7 @@ const productManager = new ProductManager();
 
 // Io
 module.exports = (io) => {
+  const router = express.Router();
   // Crear producto
   router.post('/', async (req, res) => {
     try {

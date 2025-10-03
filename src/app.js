@@ -23,7 +23,6 @@ app.engine('hbs', handlebars.engine({
   extname: '.hbs',
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, 'views', 'layouts'),
-  partialsDir: path.join(__dirname, 'views', 'partials')
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -33,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas
-const productsRouter = require('./routes/products.routes');
+const productsRouter = require('./routes/products.routes')(io);
 const cartsRouter = require('./routes/carts.routes');
 const viewsRouter = require('./routes/views.routes');
 
