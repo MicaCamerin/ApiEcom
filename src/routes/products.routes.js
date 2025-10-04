@@ -1,7 +1,5 @@
 const express = require('express');
-const ProductManager = require('../managers/product.manager');
 const router = express.Router();
-const productManager = new ProductManager();
 const ProductDAO = require('../data/product.mongo');
 
 

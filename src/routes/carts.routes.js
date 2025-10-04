@@ -1,7 +1,5 @@
 const express = require('express');
-const CartManager = require('../managers/cart.manager');
 const router = express.Router();
-const cartManager = new CartManager();
 const CartDAO = require('../data/cart.mongo');
 
 router.post('/', async (req, res) => {
