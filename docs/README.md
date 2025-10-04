@@ -4,54 +4,56 @@ Proyecto backend desarrollado en **Node.js con Express**, que simula un pequeño
 El sistema permite gestionar productos y carritos, renderizar vistas con **Handlebars**, y actualizar en tiempo real la lista de productos usando **Socket.io**.  
 La persistencia principal está implementada con **MongoDB + Mongoose**.
 
-
-Este proyecto es encuentra en curso.
-
 ---
 
 ## Funcionalidades principales
 
 - **Productos**
-- CRUD completo de productos.
-- Listado con **paginación, filtros y ordenamiento**.
-- Vistas en Handlebars para explorar productos y ver su detalle.
-- Actualización en tiempo real de la lista de productos con **Socket.io**.
+- Ver lista paginada de productos.
+- Consultar detalle individual.
+- Crear, actualizar y eliminar productos.
+- Filtrar y ordenar mediante query params (`limit`, `page`, `sort`, `query`).
+- Actualización en tiempo real vía WebSockets.
 
 - **Carritos**
-- CRUD completo de carritos.
-- Agregar, actualizar cantidad, eliminar productos o vaciar carrito.
-- Vista para visualizar un carrito con productos **poblados** desde MongoDB.
+- Crear carritos vacíos.
+- Agregar, eliminar y modificar productos dentro de un carrito.
+- Vaciar carrito completo.
+
+### Websockets
+- La vista `/realtimeproducts` permite ver y modificar la lista de productos sin recargar la página.
 
 ---
 
 ## Tecnologías usadas
-- Node.js
-- Express 
-- MongoDB + Mongoose
-- Handlebars 
-- Socket.io
+- Node.js  
+- Express  
+- MongoDB + Mongoose  
+- Handlebars  
+- Socket.io  
+- Dotenv 
 
 ---
 
 ## Estructura del proyecto
 
 src/
-├── config/ # Configuración (MongoDB, dotenv)
-├── data/ # DAOs de acceso a MongoDB
-├── managers/ # Lógica de negocio
-├── public/ # Archivos estáticos (CSS, JS)
-├── routes/ # Rutas de la API y vistas
-├── views/ # Vistas con Handlebars
-└── app.js # Configuración principal del servidor
+├── config/          # Configuración general y conexión a MongoDB
+├── data/            # DAOs con persistencia en Mongo
+├── public/          # Archivos estáticos (CSS, JS)
+├── routes/          # Rutas API y vistas
+├── views/           # Plantillas Handlebars
+└── app.js           # Configuración principal del servidor
 
 ## Endpoints principales
 
-- `/api/products` → CRUD + paginación, filtros y ordenamientos  
-- `/api/carts` → CRUD completo con populate  
-- `/products` → vista con paginación de productos  
-- `/products/:pid` → vista de detalle de producto  
-- `/carts/:cid` → vista del carrito  
-
+- /api/products → CRUD completo de productos con paginación, filtros (query) y ordenamientos (sort).
+- /api/carts → CRUD completo de carritos, con uso de populate para mostrar los productos asociados.
+- / → vista principal (home) con listado de productos.
+- /products → vista con paginación y filtros de productos.
+- /products/:pid → vista de detalle de producto individual
+- /carts/:cid → vista del carrito del usuario.
+- /realtimeproducts → vista en tiempo real con WebSockets para crear y eliminar productos dinámicamente.
 
 ## Cómo ejecutar el proyecto
 

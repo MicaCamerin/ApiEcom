@@ -7,6 +7,7 @@ const { Server } = require('socket.io');
 const handlebars = require('express-handlebars');
 const connectDB = require('./config/index'); 
 require('dotenv').config();
+const ProductDAO = require('./data/product.mongo');
 
 const PORT = process.env.PORT || 8080;
 
@@ -44,15 +45,25 @@ app.use('/', viewsRouter);
 io.on('connection', (socket) => {
   console.log('Nuevo cliente conectado', socket.id);
 
-  socket.on('newProduct', (product) => {
-    io.emit('updateProducts', product);
+  // Cliente emite 'newProduct' -> guarda en DB y reemite con el id real
+  socket.on('newProduct', async (product) => {
+    try {
+      const saved = await ProductDAO.create(product);
+      io.emit('updateProducts', saved);
+    } catch (err) {
+      console.error('WS newProduct error:', err);
+      socket.emit('error', { message: 'No se pudo crear el producto' });
+    }
   });
 
-  socket.on('deleteProduct', (id) => {
-    io.emit('removeProduct', id);
+  // Cliente emite 'deleteProduct' -> borra en DB y reemite id eliminado
+  socket.on('deleteProduct', async (id) => {
+    try {
+      await ProductDAO.delete(id);
+      io.emit('removeProduct', id);
+    } catch (err) {
+      console.error('WS deleteProduct error:', err);
+      socket.emit('error', { message: 'No se pudo eliminar el producto' });
+    }
   });
-});
-
-httpServer.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });

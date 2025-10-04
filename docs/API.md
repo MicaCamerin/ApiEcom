@@ -95,14 +95,10 @@ DELETE /api/carts/:cid
 
 ## Notas importantes
 
-- Persistencia en MongoDB Atlas con Mongoose.
-- Los carritos almacenan solo IDs de productos, pero al consultarlos se devuelven poblados con la info completa (populate).
-- Vistas con Handlebars:
-
-/products → lista paginada con botones de agregar al carrito
-
-/products/:pid → detalle de producto
-
-/carts/:cid → detalle del carrito con productos poblados
-
-- Productos en tiempo real vía WebSockets en /realtimeproducts.
+- IDs generados automáticamente por MongoDB.
+- Persistencia en base de datos (no archivos JSON).
+- Renderizado dinámico con Handlebars.
+- Actualización en tiempo real mediante Socket.io en /realtimeproducts.
+- Websockets (vista /realtimeproducts)
+    - Evento newProduct → el servidor crea un nuevo producto en Mongo y lo emite a todos los clientes.
+    - Evento deleteProduct → el servidor elimina el producto por ID y notifica a todos los clientes.

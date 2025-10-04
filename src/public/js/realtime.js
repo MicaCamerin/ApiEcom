@@ -14,9 +14,9 @@ productForm.addEventListener('submit', (e) => {
 });
 
 // Eliminar producto
-deleteForm.addEventListener('submit', (e) => {
+deleteForm?.addEventListener('submit', (e) => {
   e.preventDefault();
-  const id = e.target.id.value;
+  const id = e.target.id.value || e.target.elements['id'].value;
   socket.emit('deleteProduct', id);
   deleteForm.reset();
 });
@@ -24,9 +24,9 @@ deleteForm.addEventListener('submit', (e) => {
 // Actualizar lista
 socket.on('updateProducts', (product) => {
   const li = document.createElement('li');
-  li.id = `prod-${product.id}`;
-  li.textContent = `${product.id} - ${product.title} - ${product.price}`;
-  productList.appendChild(li);
+  li.id = `prod-${product._id}`;
+  li.textContent = `${product._id} - ${product.title} - ${product.price}`;
+  productList?.appendChild(li);
 });
 
 // Eliminar producto en lista

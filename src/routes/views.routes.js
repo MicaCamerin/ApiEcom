@@ -1,16 +1,22 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.render('pages/home', { layout: 'main' });
-});
-
-
-const ProductManager = require('../managers/product.manager');
-const productManager = new ProductManager();
 const ProductDAO = require('../data/product.mongo');
 const CartDAO = require('../data/cart.mongo');
 
+// Home
+router.get('/', async (req, res) => {
+  try {
+    const result = await ProductDAO.listProducts({ limit: 10, page: 1 });
+    const products = result.payload || [];
+    res.render('pages/home', { layout: 'main', products });
+  } catch (error) {
+    console.error('GET / render error:', error);
+    res.status(500).send('Error rendering home');
+  }
+});
+
+// Lista completa de productos
 router.get('/products', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
@@ -30,6 +36,7 @@ router.get('/products', async (req, res) => {
   }
 });
 
+// Detalle de producto
 router.get('/products/:pid', async (req, res) => {
   try {
     const product = await ProductDAO.getById(req.params.pid);
@@ -41,6 +48,7 @@ router.get('/products/:pid', async (req, res) => {
   }
 });
 
+// Detalle del carrito
 router.get('/carts/:cid', async (req, res) => {
   try {
     const cart = await CartDAO.getById(req.params.cid);
@@ -49,6 +57,18 @@ router.get('/carts/:cid', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Error al renderizar carrito');
+  }
+});
+
+// Página de productos en tiempo real (WebSockets)
+router.get('/realtimeproducts', async (req, res) => {
+  try {
+    const result = await ProductDAO.listProducts({ limit: 100, page: 1 });
+    const products = result.payload || [];
+    res.render('pages/realTimeProducts', { layout: 'main', products });
+  } catch (error) {
+    console.error('GET /realtimeproducts render error:', error);
+    res.status(500).send('Error rendering realtime view');
   }
 });
 

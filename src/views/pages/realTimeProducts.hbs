@@ -2,7 +2,7 @@
 
 <ul id="product-list">
   {{#each products}}
-    <li id="prod-{{this.id}}">{{this.id}} - {{this.title}} - {{this.price}}</li>
+    <li id="prod-{{this._id}}">{{this._id}} - {{this.title}} - {{this.price}}</li>
   {{/each}}
 </ul>
 
@@ -23,5 +23,6 @@
 </form>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="/src/public/js/realtime.js"></script>
 
 
