@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const CartDAO = require('./cart.mongo');
 
 class UserDAO {
-  async createUser(userData) {
+  async create(userData) {
     // validaciones 
     if (!userData.password) throw new Error('Password requerido');
     if (!userData.email) throw new Error('Email requerido');
@@ -26,7 +26,7 @@ class UserDAO {
     return newUser.toObject(); 
   }
 
-  async findByEmail(email) {
+  async getByEmail (email) {
     return User.findOne({ email }).lean();
   }
 

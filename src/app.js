@@ -14,12 +14,14 @@ const usersRouter = require('./routes/users.routes');
 
 const passport = require('passport');
 const initializePassport = require('./config/passport');
+const sessionsRouter = require('./routes/sessions.routes');
 
 initializePassport();
 app.use(passport.initialize());
 
 app.use(cookieParser());
-app.use('/api/sessions', usersRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/sessions', sessionsRouter);
 
 const PORT = process.env.PORT || 8080;
 
