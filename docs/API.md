@@ -1,8 +1,19 @@
 # API - Cafeto
 
-API REST para la gestión de **productos** y **carritos de compras**.  
-Desarrollada en **Node.js + Express**, con persistencia en **MongoDB + Mongoose**.
+API REST para la gestión de **usuarios**, **sesiones**, **productos** y **carritos de compras**.  
+Desarrollada en **Node.js + Express**, con persistencia en **MongoDB + Mongoose**, autenticación con **Passport + JWT** y manejo de cookies.
 ---
+
+## Usuarios y Sesiones
+
+### ➤ Registrar usuarios
+POST /api/sessions/register
+
+### ➤ Loging de usuarios
+POST /api/sessions/login
+
+### ➤ Validar sesión del usuario logueado
+GET /api/sessions/current
 
 ## Productos
 
@@ -95,6 +106,9 @@ DELETE /api/carts/:cid
 
 ## Notas importantes
 
+- Autenticación: JWT en cookie httpOnly.
+- Passport: estrategias local + jwt.
+- Contraseñas siempre hasheadas con bcrypt.
 - IDs generados automáticamente por MongoDB.
 - Persistencia en base de datos (no archivos JSON).
 - Renderizado dinámico con Handlebars.
