@@ -1,4 +1,5 @@
 
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -6,8 +7,19 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const handlebars = require('express-handlebars');
 const connectDB = require('./config/index'); 
-require('dotenv').config();
 const ProductDAO = require('./data/product.mongo');
+
+const cookieParser = require('cookie-parser');
+const usersRouter = require('./routes/users.routes');
+
+const passport = require('passport');
+const initializePassport = require('./config/passport');
+
+initializePassport();
+app.use(passport.initialize());
+
+app.use(cookieParser());
+app.use('/api/sessions', usersRouter);
 
 const PORT = process.env.PORT || 8080;
 
@@ -66,4 +78,8 @@ io.on('connection', (socket) => {
       socket.emit('error', { message: 'No se pudo eliminar el producto' });
     }
   });
+});
+
+httpServer.listen(PORT, () => {
+  console.log(`Servidor escuchando en puerto ${PORT}`);
 });
