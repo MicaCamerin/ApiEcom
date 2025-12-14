@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const productService = require('../services/product.service');
+const passport = require('passport');
+const authorizeRole = require('../middlewares/authorization.middleware');
 
 
 module.exports = (io) => {
@@ -35,7 +37,9 @@ module.exports = (io) => {
   });
 
   // POST 
-  router.post('/', async (req, res) => {
+  router.post('/',
+  passport.authenticate('jwt', { session: false }),
+  authorizeRole(['admin']), async (req, res) => {
     try {
       const newProd = await productService.createProduct(req.body);
       io.emit('updateProducts', newProd);
@@ -47,7 +51,9 @@ module.exports = (io) => {
   });
 
   // DELETE 
-  router.delete('/:pid', async (req, res) => {
+  router.delete('/:pid',
+  passport.authenticate('jwt', { session: false }),
+  authorizeRole(['admin']), async (req, res) => {
     try {
       await productService.deleteProduct(req.params.pid);
       io.emit('removeProduct', req.params.pid);
@@ -71,7 +77,9 @@ module.exports = (io) => {
   });
 
   // PUT
-  router.put('/:pid', async (req, res) => {
+  router.put('/:pid',
+  passport.authenticate('jwt', { session: false }),
+  authorizeRole(['admin']), async (req, res) => {
     try {
       const updated = await productService.updateProduct(req.params.pid, req.body);
       if (!updated) return res.status(404).json({ status: 'error', message: 'No encontrado' });

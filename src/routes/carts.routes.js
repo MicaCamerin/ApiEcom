@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const cartService = require('../services/cart.service');
+const passport = require('passport');
+const authorizeRole = require('../middlewares/authorization.middleware');
 
 
-router.post('/', async (req, res) => {
+
+router.post('/:cid/product/:pid',
+  passport.authenticate('jwt', { session: false }),
+  authorizeRole(['user']), async (req, res) => {
   try {
     const cart = await cartService.createCart();
     res.status(201).json({ status: 'success', payload: cart });

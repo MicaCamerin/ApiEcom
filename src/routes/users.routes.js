@@ -4,6 +4,7 @@ const UserDAO = require('../data/user.mongo');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const UserDTO = require('../dtos/user.dto');
 
 const SECRET = process.env.JWT_SECRET || 'secretjwt';
 
@@ -42,8 +43,13 @@ router.post('/login', (req, res, next) => {
 router.get('/current',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    
-    res.json({ status: 'success', payload: req.user });
+
+    const safeUser = new UserDTO(req.user);
+
+    res.json({
+      status: 'success',
+      payload: safeUser
+    });
   }
 );
 
