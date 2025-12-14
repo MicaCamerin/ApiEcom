@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ProductDAO = require('../data/product.mongo');
+const productService = require('../services/product.service');
 
 
 module.exports = (io) => {
@@ -15,7 +15,7 @@ module.exports = (io) => {
       const sort = req.query.sort || null;
 
       const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}`;
-      const result = await ProductDAO.listProducts({ limit, page, query, sort });
+      const result = await productService.getProducts({ limit, page, query, sort });
 
       const buildLink = (p) => {
         if (!p) return null;
@@ -37,7 +37,7 @@ module.exports = (io) => {
   // POST 
   router.post('/', async (req, res) => {
     try {
-      const newProd = await ProductDAO.create(req.body);
+      const newProd = await productService.createProduct(req.body);
       io.emit('updateProducts', newProd);
       res.status(201).json({ status: 'success', payload: newProd });
     } catch (error) {
@@ -49,7 +49,7 @@ module.exports = (io) => {
   // DELETE 
   router.delete('/:pid', async (req, res) => {
     try {
-      await ProductDAO.delete(req.params.pid);
+      await productService.deleteProduct(req.params.pid);
       io.emit('removeProduct', req.params.pid);
       res.json({ status: 'success', message: 'Producto eliminado' });
     } catch (error) {
@@ -61,7 +61,7 @@ module.exports = (io) => {
   // GET por id
   router.get('/:pid', async (req, res) => {
     try {
-      const product = await ProductDAO.getById(req.params.pid);
+      const product = await productService.getProductById(req.params.pid);
       if (!product) return res.status(404).json({ status: 'error', message: 'No encontrado' });
       res.json({ status: 'success', payload: product });
     } catch (error) {
@@ -73,7 +73,7 @@ module.exports = (io) => {
   // PUT
   router.put('/:pid', async (req, res) => {
     try {
-      const updated = await ProductDAO.update(req.params.pid, req.body);
+      const updated = await productService.updateProduct(req.params.pid, req.body);
       if (!updated) return res.status(404).json({ status: 'error', message: 'No encontrado' });
       io.emit('updateProducts', updated); // emitir para refrescar
       res.json({ status: 'success', payload: updated });

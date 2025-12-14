@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const CartDAO = require('../data/cart.mongo');
+const cartService = require('../services/cart.service');
+
 
 router.post('/', async (req, res) => {
   try {
-    const cart = await CartDAO.create();
+    const cart = await cartService.createCart();
     res.status(201).json({ status: 'success', payload: cart });
   } catch (error) {
     console.error('POST /api/carts', error);
@@ -16,7 +17,7 @@ router.post('/', async (req, res) => {
 router.get('/:cid', async (req, res) => {
   try {
     const cid = req.params.cid;
-    const cart = await CartDAO.getById(cid);
+    const cart = await cartService.getCart(cid);
     if (!cart) return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
     res.json({ status: 'success', payload: cart });
   } catch (error) {
@@ -25,11 +26,11 @@ router.get('/:cid', async (req, res) => {
   }
 });
 
-// POST /api/carts/:cid/product/:pid -> agregar (incrementa si existe)
+// POST /api/carts/:cid/product/:pid -> agregar 
 router.post('/:cid/product/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const cart = await CartDAO.addProductToCart(cid, pid);
+    const cart = await cartService.addToCart(cid, pid);
     if (!cart) return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
     res.json({ status: 'success', payload: cart });
   } catch (error) {
@@ -42,7 +43,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
 router.delete('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const cart = await CartDAO.deleteProductFromCart(cid, pid);
+    const cart = await cartService.removeFromCart(cid, pid);
     if (!cart) return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
     res.json({ status: 'success', payload: cart });
   } catch (error) {
@@ -56,7 +57,7 @@ router.put('/:cid', async (req, res) => {
   try {
     const { cid } = req.params;
     const productsArray = req.body.products || [];
-    const cart = await CartDAO.updateCartProducts(cid, productsArray);
+    const cart = await cartService.updateCart(cid, productsArray);
     if (!cart) return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
     res.json({ status: 'success', payload: cart });
   } catch (error) {
@@ -71,7 +72,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
     if (quantity == null) return res.status(400).json({ status: 'error', message: 'Falta quantity' });
-    const cart = await CartDAO.updateProductQuantity(cid, pid, Number(quantity));
+    const cart = await cartService.updateQuantity(cid, pid, Number(quantity));
     if (!cart) return res.status(404).json({ status: 'error', message: 'Carrito o producto no encontrado' });
     res.json({ status: 'success', payload: cart });
   } catch (error) {
@@ -84,7 +85,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
 router.delete('/:cid', async (req, res) => {
   try {
     const { cid } = req.params;
-    const cart = await CartDAO.emptyCart(cid);
+    const cart = await cartService.emptyCart(cid);
     if (!cart) return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
     res.json({ status: 'success', payload: cart });
   } catch (error) {
