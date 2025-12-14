@@ -1,118 +1,124 @@
 # API - Cafeto
 
-API REST para la gestión de **usuarios**, **sesiones**, **productos** y **carritos de compras**.  
-Desarrollada en **Node.js + Express**, con persistencia en **MongoDB + Mongoose**, autenticación con **Passport + JWT** y manejo de cookies.
+API REST para la gestión de **usuarios**, **sesiones**, **productos**, **carritos** y **compras**.
+Desarrollada en **Node.js + Express**, con persistencia en **MongoDB + Mongoose**, autenticación con **Passport + JWT**, autorización por roles y envío de correos electrónicos.
 ---
 
 ## Usuarios y Sesiones
 
-### ➤ Registrar usuarios
+### ➤ Registrar usuario
 POST /api/sessions/register
-
-### ➤ Loging de usuarios
-POST /api/sessions/login
-
-### ➤ Validar sesión del usuario logueado
-GET /api/sessions/current
-
-## Productos
-
-### ➤ Listar productos con consultas avanzadas
-GET /api/products  
-
-Query params disponibles:
-- **limit** → cantidad de productos por página (default: 10)  
-- **page** → página a consultar (default: 1)  
-- **query** → filtrar por categoría o disponibilidad (`status=true/false`)  
-- **sort** → ordenar por precio (`asc` o `desc`)  
-
 
 ---
 
-### ➤ Obtener un producto por ID
+### ➤ Login de usuario
+POST /api/sessions/login
+
+- Genera JWT
+- Se envía en cookie httpOnly
+
+---
+
+### ➤ Usuario autenticado (DTO)
+GET /api/sessions/current
+
+- Retorna solo información no sensible del usuario.
+
+---
+
+### ➤ Recuperación de contraseña
+POST /api/sessions/forgot-password
+
+- Envía email con link de recuperación.
+- El token expira en 1 hora.
+
+---
+
+### ➤ Resetear contraseña
+POST /api/sessions/reset-password
+
+- Evita reutilizar la contraseña anterior.
+
+---
+
+## Productos
+
+### ➤ Listar productos
+GET /api/products
+
+Query params:
+- limit
+- page
+- sort (asc | desc)
+- query
+
+---
+
+### ➤ Obtener producto por ID
 GET /api/products/:pid
 
 ---
 
-### ➤ Crear un producto
-POST /api/products  
+### ➤ Crear producto (ADMIN)
+POST /api/products
 
-Body (JSON):
-```json
-{
-  "title": "Café Colombiano",
-  "price": 1200
-}
-```
 ---
 
-### ➤ Actualizar producto
+### ➤ Actualizar producto (ADMIN)
 PUT /api/products/:pid
 
 ---
 
-### ➤ Eliminar un producto
+### ➤ Eliminar producto (ADMIN)
 DELETE /api/products/:pid
-
-Parámetro de ruta:
-- pid → ID del producto a eliminar.
-
-Respuesta exitosa (200):
-```json
-{
-  "status": "success",
-  "message": "Producto eliminado"
-}
-```
 
 ---
 
 ## Carritos
 
-### ➤ Crear un carrito
+### ➤ Crear carrito
 POST /api/carts
 
 ---
 
-### ➤ Ver productos de un carrito
+### ➤ Ver carrito
 GET /api/carts/:cid
 
 ---
 
-### ➤ Agregar producto a un carrito
-POST /api/carts/:cid/product/:pid
+### ➤ Agregar producto al carrito (USER)
+POST /api/carts/:cid/products/:pid
 
 ---
 
-### ➤ Eliminar un producto de un carrito
+### ➤ Eliminar producto del carrito
 DELETE /api/carts/:cid/products/:pid
 
 ---
 
-### ➤ Remplazar todo el carrito 
-PUT /api/carts/:cid
-
----
-
-### ➤ Actualizar cantidad de producto
-PUT /api/carts/:cid/products/:pid
-
----
-
-### ➤ Vaciar carrito 
+### ➤ Vaciar carrito
 DELETE /api/carts/:cid
+
+---
+
+## Compras
+
+### ➤ Finalizar compra
+POST /api/carts/:cid/purchase
+
+- Verifica stock.
+- Genera ticket.
+- Descuenta stock.
+- Maneja compras completas o parciales.
 
 ---
 
 ## Notas importantes
 
-- Autenticación: JWT en cookie httpOnly.
-- Passport: estrategias local + jwt.
-- Contraseñas siempre hasheadas con bcrypt.
-- IDs generados automáticamente por MongoDB.
-- Persistencia en base de datos (no archivos JSON).
-- Renderizado dinámico con Handlebars.
-- Actualización en tiempo real mediante Socket.io en /realtimeproducts.
-- Websockets (vista /realtimeproducts)
-    - Evento newProduct → el servidor crea un nuevo producto en Mongo y lo emite a todos los clientes.
-    - Evento deleteProduct → el servidor elimina el producto por ID y notifica a todos los clientes.
+- Autenticación con JWT en cookie httpOnly.
+- Autorización por roles (`user`, `admin`).
+- DTO para evitar exponer datos sensibles.
+- Contraseñas hasheadas con bcrypt.
+- Mailing con Nodemailer.
+- Arquitectura basada en DAO + Repository.
+- WebSockets para actualización en tiempo real.
