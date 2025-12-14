@@ -4,6 +4,8 @@ Proyecto backend desarrollado en **Node.js con Express**, que simula un pequeño
 Incluye **autenticación de usuarios con JWT**, manejo de **roles**, lógica de compra con **tickets**, recuperación de contraseña por correo electrónico y una arquitectura basada en **DAO, Repository y DTO**.
 La persistencia está implementada con **MongoDB + Mongoose**, renderizado de vistas con **Handlebars** y actualización en tiempo real mediante **Socket.io**.
 
+⚠️ El archivo `.env` no se incluye en el repositorio por seguridad.  
+Se provee `.env.example` con las variables necesarias para la configuración.⚠️
 ---
 
 ## Funcionalidades principales
