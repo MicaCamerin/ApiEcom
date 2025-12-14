@@ -33,6 +33,12 @@ class UserDAO {
   async getById(uid) {
     return User.findById(uid).lean();
   }
+
+  async updatePassword(uid, newPassword) {
+  return User.findByIdAndUpdate(uid, { password: newPassword });
 }
+}
+
+
 
 module.exports = new UserDAO();

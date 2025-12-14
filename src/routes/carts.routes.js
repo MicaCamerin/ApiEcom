@@ -3,8 +3,25 @@ const router = express.Router();
 const cartService = require('../services/cart.service');
 const passport = require('passport');
 const authorizeRole = require('../middlewares/authorization.middleware');
+const purchaseService = require('../services/purchase.service');
 
+router.post(
+  '/:cid/purchase',
+  passport.authenticate('current', { session: false }),
+  authorizeRole('user'),
+  async (req, res) => {
+    try {
+      const result = await purchaseService.purchaseCart(
+        req.params.cid,
+        req.user.email
+      );
 
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 
 router.post('/:cid/product/:pid',
   passport.authenticate('jwt', { session: false }),
